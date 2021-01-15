@@ -10,25 +10,27 @@
 
 PipePair = Class{}
 
--- size of the gap between pipes
-local GAP_HEIGHT = 90
 
-function PipePair:init(y)
+
+function PipePair:init(y,gapHeight)
     -- flag to hold whether this pair has been scored (jumped through)
     self.scored = false
 
     -- initialize pipes past the end of the screen
     self.x = VIRTUAL_WIDTH + 32
 
+    
     -- y value is for the topmost pipe; gap is a vertical shift of the second lower pipe
     self.y = y
 
     -- instantiate two pipes that belong to this pair
     self.pipes = {
         ['upper'] = Pipe('top', self.y),
-        ['lower'] = Pipe('bottom', self.y + PIPE_HEIGHT + GAP_HEIGHT)
+        ['lower'] = Pipe('bottom', math.min(self.y + PIPE_HEIGHT + gapHeight - 5, VIRTUAL_HEIGHT - 25))
     }
 
+    -- gap value variable
+self.gap = math.min(gapHeight, VIRTUAL_HEIGHT - 20 - (self.y + PIPE_HEIGHT))
     -- whether this pipe pair is ready to be removed from the scene
     self.remove = false
 end
@@ -43,10 +45,13 @@ function PipePair:update(dt)
     else
         self.remove = true
     end
+    
 end
 
 function PipePair:render()
     for l, pipe in pairs(self.pipes) do
         pipe:render()
+       
     end
+   
 end

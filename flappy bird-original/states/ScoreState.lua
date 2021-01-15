@@ -16,6 +16,11 @@ ScoreState = Class{__includes = BaseState}
 ]]
 function ScoreState:enter(params)
     self.score = params.score
+    birds = {
+        ['bronze'] = love.graphics.newImage('bronze_birb.png'),
+        ['silver'] = love.graphics.newImage('silver_birb.png'),
+        ['gold'] = love.graphics.newImage('gold_birb.png')
+    }
 end
 
 function ScoreState:update(dt)
@@ -32,6 +37,21 @@ function ScoreState:render()
 
     love.graphics.setFont(mediumFont)
     love.graphics.printf('Score: ' .. tostring(self.score), 0, 100, VIRTUAL_WIDTH, 'center')
+    -- minimum score needed to get trophy
+    local bronzeScore = 10
+    local silverScore = 25
+    local goldScore = 50
+    if self.score < silverScore and self.score >= bronzeScore  then
+        love.graphics.printf('You obtained the Bronze Bird!', 0, 120, VIRTUAL_WIDTH, 'center')
+        love.graphics.draw(birds['bronze'], VIRTUAL_WIDTH/2 + 40, VIRTUAL_HEIGHT/2 - 50)
+    elseif self.score < goldScore and self.score >= silverScore  then
+        love.graphics.printf('You obtained the Silver Bird!', 0, 120, VIRTUAL_WIDTH, 'center')
+        love.graphics.draw(birds['silver'], VIRTUAL_WIDTH/2 + 40, VIRTUAL_HEIGHT/2 - 50)
+    elseif self.score >= goldScore then
+        love.graphics.printf('You obtained the Golden Bird!', 0, 120, VIRTUAL_WIDTH, 'center')
+        love.graphics.draw(birds['gold'], VIRTUAL_WIDTH/2 + 40, VIRTUAL_HEIGHT/2 - 50)
+
+    end
 
     love.graphics.printf('Press Enter to Play Again!', 0, 160, VIRTUAL_WIDTH, 'center')
 end
